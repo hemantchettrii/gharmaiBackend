@@ -1,31 +1,32 @@
 const express = require("express");
-const userModel = require("../models/usermodel");
+const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs"); //Password hash
 const jwt = require("jsonwebtoken"); //token generator
 
-const upload = require("../middleware/fileUpload");
-const profileUpload = require("../middleware/profile.imageUpload");
+// const upload = require("../middleware/fileUpload");
+// const profileUpload = require("../middleware/profile.imageUpload");
 
 /*** bulk export of the route ***/
 const router = new express.Router();
 const verifyUser = require("../middleware/auth");
 
 //Register System
-router.post('/user/register', verifyUser.verifyUser, function(req, res) {
-    const un = req.body.name;
+router.post('/user/register', function (req, res) {
+    const fn = req.body.firstname;
+    const un = req.body.username;
     const em = req.body.email;
     const pw = req.body.password;
-    const conpw = req.body.confirmpassword;
-    const dob = req.body.dateofbirth;
-    const add = req.body.address;
-    const gen = req.body.gender;
-    const cont = req.body.contactNo;
-    const pp = req.body.profile_pic;
-    const ut = req.body.userType;
+    // const conpw = req.body.confirmpassword;
+    // const dob = req.body.dateofbirth;
+    // const add = req.body.address;
+    // const gen = req.body.gender;
+    // const cont = req.body.contactNo;
+    // const pp = req.body.profile_pic;
+    // const ut = req.body.userType;
 
     bcrypt.hash(pw, 10, function(err, hash1) {
 
-        const data = new userModel({ username: n, email: em, password: hash1, phone: ph, gender: gen, profile_pic: pp, userType: ut});
+        const data = new userModel({ firstname: fn, username: un, email: em, password: hash1});
         data.save()
             .then(function(result) {
                 res.status(201).json({ message: "Registered successfully" });

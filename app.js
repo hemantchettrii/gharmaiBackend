@@ -3,7 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("./myDatabase/dbConnection");
 const userModel = require("./route/userRoute");
-const adminModel = require("./route/adminRoute");
+const workerModel = require("./route/workerRoute");
 
 const bodyParser = require("body-parser");
 
@@ -22,7 +22,7 @@ const path = require("path");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(adminModel);
+app.use(workerModel);
 app.use(userModel);
 // app.use(movieModel);
 // app.use(reviewModel);
