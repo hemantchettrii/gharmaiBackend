@@ -12,10 +12,12 @@ const verifyUser = require("../middleware/auth");
 
 //Register System
 router.post('/user/register', function (req, res) {
-    const fn = req.body.firstname;
-    const un = req.body.username;
-    const em = req.body.email;
-    const pw = req.body.password;
+  const fn = req.body.username;
+  const em = req.body.emailUser;
+  const pw = req.body.passwordUser;
+  const add = req.body.addressUser;
+  const gen = req.body.genderUser;
+  const phone = req.body.phoneUser;
     // const conpw = req.body.confirmpassword;
     // const dob = req.body.dateofbirth;
     // const add = req.body.address;
@@ -26,15 +28,16 @@ router.post('/user/register', function (req, res) {
 
     bcrypt.hash(pw, 10, function(err, hash1) {
 
-        const data = new userModel({ firstname: fn, username: un, email: em, password: hash1});
-        data.save()
-            .then(function(result) {
-                res.status(201).json({ message: "Registered successfully" });
-            })
-            .catch(function(error) {
-                res.status(500).json({ message: error })
-            })
-    })
+      const data = new userModel({ username: fn, emailUser: em, passwordUser: hash1, addressUser: add, genderUser:gen, phoneUser:phone});
+      data.save()
+          .then(function(result) {
+            console.log("Register vayo")
+              res.status(201).json({ message: "User Registered successfully", success : true });
+          })
+          .catch(function(error) {
+              res.status(500).json({ message: error })
+          })
+  })
     //const cpw = req.body.confirmpassword;
 })
 
@@ -43,7 +46,7 @@ router.post("/user/login", function (req, res) {
   // console.log(req.body) --->Checking is the data is coming through frontend
   /*** FIRST, WE NEED USERNAME AND PASSWORD FROM CLIENT ***/
   const username = req.body.username;
-  const password = req.body.password;
+  const password = req.body.passwordUser;
 
   /*** SECOND, WE NEED TO CHECK IF THE USERNAME EXIST OR NOT ***/
   userModel
@@ -65,6 +68,7 @@ router.post("/user/login", function (req, res) {
 
         //Now we need to create a token...
         const token = jwt.sign({ userId: userData._id }, "anysecretkey");
+        console.log("Yp pani vayo")
         res
           .status(200)
           .json({ token: token, userId: userData._id, success: true, message: "Authorization Success!!!", username: userData.username, userProfile : userData.profile_pic });

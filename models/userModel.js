@@ -4,15 +4,12 @@ const userSchema = new mongoose.Schema({
     fullname: {
         type: String
     },
-    email: {
+    emailUser: {
         type: String,
         required: 'Email address is required',
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-    password: {
-        type: String
-    },
-    confirmpassword: {
+    passwordUser: {
         type: String
     },
     profile_pic: {
@@ -21,15 +18,15 @@ const userSchema = new mongoose.Schema({
     dateofbirth: {
         type: String
     },
-    address: {
+    addressUser: {
         type: String
     },
-    gender: {
+    genderUser: {
         type: String,
         enum: ['Male', 'Female', 'Others'],
         default: 'Male'
     },
-    contactNo: {
+    phoneUser: {
         type: Number
     },
     userType:{
