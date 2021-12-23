@@ -12,10 +12,13 @@ const userSchema = new mongoose.Schema({
     passwordUser: {
         type: String
     },
-    profile_pic: {
+    confirmpasswordUser: {
         type: String
     },
-    dateofbirth: {
+    profile_picUser: {
+        type: String
+    },
+    dateofbirthUser: {
         type: String
     },
     addressUser: {
@@ -26,10 +29,10 @@ const userSchema = new mongoose.Schema({
         enum: ['Male', 'Female', 'Others'],
         default: 'Male'
     },
-    phoneUser: {
+    contactNoUser: {
         type: Number
     },
-    userType:{
+    userTypeUser:{
         type: String,
         enum : ['Worker','User'],
         default : 'User'

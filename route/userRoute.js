@@ -11,42 +11,51 @@ const router = new express.Router();
 const verifyUser = require("../middleware/auth");
 
 //Register System
-router.post('/user/register', function (req, res) {
-  const fn = req.body.username;
+router.post("/user/register", function (req, res) {
+  const fn = req.body.firstname;
+  const un = req.body.username;
   const em = req.body.emailUser;
   const pw = req.body.passwordUser;
+  const conpw = req.body.confirmpasswordUser;
+  const dob = req.body.dateofbirthUser;
   const add = req.body.addressUser;
   const gen = req.body.genderUser;
-  const phone = req.body.phoneUser;
-    // const conpw = req.body.confirmpassword;
-    // const dob = req.body.dateofbirth;
-    // const add = req.body.address;
-    // const gen = req.body.gender;
-    // const cont = req.body.contactNo;
-    // const pp = req.body.profile_pic;
-    // const ut = req.body.userType;
+  const cont = req.body.contactNoUser;
+  const pp = req.body.profile_picUser;
+  const ut = req.body.userType;
 
-    bcrypt.hash(pw, 10, function(err, hash1) {
-
-      const data = new userModel({ username: fn, emailUser: em, passwordUser: hash1, addressUser: add, genderUser:gen, phoneUser:phone});
-      data.save()
-          .then(function(result) {
-            console.log("Register vayo")
-              res.status(201).json({ message: "User Registered successfully", success : true });
-          })
-          .catch(function(error) {
-              res.status(500).json({ message: error })
-          })
-  })
-    //const cpw = req.body.confirmpassword;
-})
+  bcrypt.hash(pw, 10, function (err, hash1) {
+    const data = new userModel({
+      firstname: fn,
+      username: un,
+      emailUser: em,
+      passwordUser: hash1,
+      confirmpasswordUser: conpw,
+      dateofbirthUser: dob,
+      addressUser: add,
+      genderUser: gen,
+      contactNoUser: cont,
+      profile_picUser: pp,
+      userType: ut,
+    });
+    data
+      .save()
+      .then(function (result) {
+        res.status(201).json({ message: "Registered successfully" });
+      })
+      .catch(function (error) {
+        res.status(500).json({ message: error });
+      });
+  });
+  //const cpw = req.body.confirmpassword;
+});
 
 /***** LOGIN SYSTEM *****/
 router.post("/user/login", function (req, res) {
   // console.log(req.body) --->Checking is the data is coming through frontend
   /*** FIRST, WE NEED USERNAME AND PASSWORD FROM CLIENT ***/
   const username = req.body.username;
-  const password = req.body.passwordUser;
+  const password = req.body.password;
 
   /*** SECOND, WE NEED TO CHECK IF THE USERNAME EXIST OR NOT ***/
   userModel
@@ -68,14 +77,47 @@ router.post("/user/login", function (req, res) {
 
         //Now we need to create a token...
         const token = jwt.sign({ userId: userData._id }, "anysecretkey");
-        console.log("Yp pani vayo")
         res
           .status(200)
-          .json({ token: token, userId: userData._id, success: true, message: "Authorization Success!!!", username: userData.username, userProfile : userData.profile_pic });
+          .json({
+            token: token,
+            userId: userData._id,
+            success: true,
+            message: "Authorization Success!!!",
+            username: userData.username,
+            userProfile: userData.profile_pic,
+          });
       });
     })
     .catch();
 });
+
+/*****  *****/
+router.get("/profile/show/:id", verifyUser.verifyUser, function (req, res) {
+  const user_id = req.params.id;
+  userModel
+    .findOne({ _id: user_id })
+    .then(function (data) {
+      res.send({ data: data, success: "true" });
+    })
+    .catch(function (err) {
+      res.status(500).json({ message: err });
+    });
+});
+
+/** DISPLAYING SINGLE USER DATA **/
+router.get("/profile/single/:id", verifyUser.verifyUser, function (req, res) {
+  const id = req.params.id;
+  userModel
+    .findById(id)
+    .then(function (data) {
+      res.status(200).json(data);
+    })
+    .catch(function (err) {
+      res.status(500).json({});
+    });
+});
+/** END OF DISPLYING SINGLE USER **/
 
 //exporting router
 module.exports = router;
