@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    fullname: {
+    username: {
         type: String
     },
     emailUser: {
@@ -29,8 +29,8 @@ const userSchema = new mongoose.Schema({
         enum: ['Male', 'Female', 'Others'],
         default: 'Male'
     },
-    contactNoUser: {
-        type: Number
+    phoneUser: {
+        type: String
     },
     userTypeUser:{
         type: String,
