@@ -12,8 +12,7 @@ const verifyUser = require("../middleware/auth");
 
 //Register System
 router.post("/user/register", function (req, res) {
-  console.log("Register hit")
-  
+  const fn = req.body.firstname;
   const un = req.body.username;
   const em = req.body.emailUser;
   const pw = req.body.passwordUser;
@@ -21,13 +20,13 @@ router.post("/user/register", function (req, res) {
   const dob = req.body.dateofbirthUser;
   const add = req.body.addressUser;
   const gen = req.body.genderUser;
-  const cont = req.body.phoneUser;
+  const cont = req.body.contactNoUser;
   const pp = req.body.profile_picUser;
   const ut = req.body.userType;
 
   bcrypt.hash(pw, 10, function (err, hash1) {
     const data = new userModel({
-      
+      firstname: fn,
       username: un,
       emailUser: em,
       passwordUser: hash1,
@@ -35,14 +34,14 @@ router.post("/user/register", function (req, res) {
       dateofbirthUser: dob,
       addressUser: add,
       genderUser: gen,
-      phoneUser: cont,
+      contactNoUser: cont,
       profile_picUser: pp,
       userType: ut,
     });
     data
       .save()
       .then(function (result) {
-        res.status(201).json({ message: "Registered successfully", success: true });
+        res.status(201).json({ message: "Registered successfully" });
       })
       .catch(function (error) {
         res.status(500).json({ message: error });
@@ -53,17 +52,15 @@ router.post("/user/register", function (req, res) {
 
 /***** LOGIN SYSTEM *****/
 router.post("/user/login", function (req, res) {
-  console.log("Login hit")
   // console.log(req.body) --->Checking is the data is coming through frontend
   /*** FIRST, WE NEED USERNAME AND PASSWORD FROM CLIENT ***/
-  const emailUser = req.body.emailUser;
-  const passwordUser = req.body.passwordUser;
+  const username = req.body.username;
+  const password = req.body.password;
 
   /*** SECOND, WE NEED TO CHECK IF THE USERNAME EXIST OR NOT ***/
   userModel
-    .findOne({ emailUser: emailUser })
+    .findOne({ username: username })
     .then(function (userData) {
-      console.log(userData)
       //all the data of username is now in the variable userData
       if (userData === null) {
         //if the username not found.that means they are invalid users!!
@@ -71,7 +68,7 @@ router.post("/user/login", function (req, res) {
       }
       //valid users in terms of username
       //now compare the stored password with the given password
-      bcrypt.compare(passwordUser, userData.passwordUser, function (err, result) {
+      bcrypt.compare(password, userData.password, function (err, result) {
         if (result === false) {
           //if password is incorrect...
           return res.status(403).json({ message: "Invalid Credentials!" });
@@ -80,7 +77,6 @@ router.post("/user/login", function (req, res) {
 
         //Now we need to create a token...
         const token = jwt.sign({ userId: userData._id }, "anysecretkey");
-        console.log("Login done")
         res
           .status(200)
           .json({
@@ -97,13 +93,12 @@ router.post("/user/login", function (req, res) {
 });
 
 /*****  *****/
-router.get("/profile/show/:id",  function (req, res) {
-  console.log("Profile Hit")
+router.get("/profile/show/:id", verifyUser.verifyUser, function (req, res) {
   const user_id = req.params.id;
   userModel
     .findOne({ _id: user_id })
     .then(function (data) {
-      res.send({ data: data, success: true });
+      res.send({ data: data, success: "true" });
     })
     .catch(function (err) {
       res.status(500).json({ message: err });
@@ -111,21 +106,54 @@ router.get("/profile/show/:id",  function (req, res) {
 });
 
 /** DISPLAYING SINGLE USER DATA **/
-router.get("/profile/single/:id", function (req, res) {
-  console.log("Single")
-
+router.get("/profile/single/:id", verifyUser.verifyUser, function (req, res) {
   const id = req.params.id;
   userModel
     .findById(id)
     .then(function (data) {
-      res.send({ data: data, success: true });
-      console.log(data)
+      res.status(200).json(data);
     })
     .catch(function (err) {
       res.status(500).json({});
     });
 });
 /** END OF DISPLYING SINGLE USER **/
+
+/************** UPDATING USER PROFILE **************/
+router.put("/profile/update/:id", verifyUser.verifyUser, function (req, res) {
+  const id = req.params.id;
+  const fn = req.body.firstname;
+  const ln = req.body.lastname;
+  const un = req.body.username;
+  const em = req.body.email;
+  // const profile_pic = req.body.profile_pic;
+  userModel
+    .updateMany(
+      { _id: id },
+      { firstname: fn, lastname: ln, username: un, email: em }
+    )
+    .then(function (result) {
+      res.status(201).json({ message: "Profile Picture Updated!" });
+    })
+    .catch(function (error) {
+      res.status(500).json({ message: error });
+    });
+});
+/************** END OF UPDATING USER PROFILE **************/
+
+//delete the data
+router.delete("/profile/delete/:id", verifyUser.verifyUser, function (req, res) {
+  // console.log("Delete function");
+  const id = req.params.id;
+  userModel
+    .deleteOne({ _id: id })
+    .then(function (req, res) {
+      res.status(201).json({ message: "Data deleted" });
+    })
+    .catch(function (error) {
+      res.status(500).json({ message: error });
+    });
+});
 
 //exporting router
 module.exports = router;
