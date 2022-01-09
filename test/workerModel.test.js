@@ -1,19 +1,19 @@
-const Worker = require('../models/workerModel');
-const mongoose = require('mongoose');
+// const Worker = require('../models/workerModel');
+// const mongoose = require('mongoose');
 
-const url = 'mongodb://localhost:27017/Gharmai_Testing';
+// const url = 'mongodb://localhost:27017/Gharmai_Testing';
 
-beforeAll(async () => {
-    await mongoose.connect(url, {
-        useNewUrlParser: true,
-        useCreateIndex: true
-    });
-});
-afterAll(async () => {
-    await mongoose.connection.close();
-});
+// beforeAll(async () => {
+//     await mongoose.connect(url, {
+//         useNewUrlParser: true,
+//         useCreateIndex: true
+//     });
+// });
+// afterAll(async () => {
+//     await mongoose.connection.close();
+// });
 
-describe('Worker schema test anything', () => {
+// describe('Worker schema test anything', () => {
 
     // Worker insert testing
     // it('testing worker insert', () => {
@@ -55,4 +55,4 @@ describe('Worker schema test anything', () => {
     //         })
 
     // });
-})
+// })

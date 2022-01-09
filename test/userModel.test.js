@@ -1,58 +1,48 @@
-const User = require('../models/userModel');
-const mongoose = require('mongoose');
-
-const url = 'mongodb://localhost:27017/Gharmai_Testing';
-
+// this is the test for movieModel Schema
+const Users = require("../models/usermodel");
+const mongoose = require("mongoose");
+// use the new name of the database
+const url = "mongodb://localhost:27017/gharmai_test";
 beforeAll(async () => {
-    await mongoose.connect(url, {
-        useNewUrlParser: true,
-        useCreateIndex: true
-    });
+  await mongoose.connect(url, {
+    useNewUrlParser: true,
+    // useCreateIndex: true,
+  });
 });
 afterAll(async () => {
-    await mongoose.connection.close();
+  await mongoose.connection.close();
 });
 
-describe('User schema test anything', () => {
+describe("User Schema test anything", () => {
+  // user insert testing
+  it("Add user testing anything", () => {
+    const user = {
+      firstname: "hemant",
+      lastname: "chettri",
+      username: "User",
+      email: "user@gmail.com",
+      password: "User@123",
+    };
+    return Users.create(user).then((pro_ret) => {
+      expect(pro_ret.username).toEqual("User");
+    });
+  });
 
-    // User insert testing
-    it('testing user insert', () => {
-        const user = {
-            'firstname': 'Rajesh',
-            'username': 'RajeshHamal',
-            'email': 'hamal16@gmail.com',
-            'password': 'madhu123'
-        };
+  // code for update testing
+  // it("to test the update user", async () => {
+  //   return useNewUrlParser
+  //     .findOneAndUpdate(
+  //       { _id: Object("614ec63620f3041c4c1918ac") },
+  //       { $set: { firstname: "test" } }
+  //     )
+  //     .then((pp) => {
+  //       expect(pp.firstname).toEqual("hemant");
+  //     });
+  // });
 
-        return User.create(user)
-            .then((pro_ret) => {
-                [
-                    except(pro_ret.username).toEqual('RajeshHamal')
-                ]
-            })
-    })
-
-    // User delete testing
-    // it('testing for delete', async () => {
-    //     const status = await User.deleteMany();
-    //     except(status.ok).toBe(1);
-    // })
-
-    // User update testing
-    // it('testing for the update', async () => {
-    //     return User.findOneAndUpdate({ _id: Object('6150b5d621a94739fc46692f') },
-    //         {
-    //             $set:
-    //             {
-    //                 firstname: 'Saugat',
-    //                 username: 'SaugatMalla',
-    //                 email: 'malla123@gmail.com',
-    //                 password: 'shristi123',
-    //             }
-    //         })
-    //         .then((pp) => {
-    //             expect(pp.username).toEqual('SaugatMalla')
-    //         })
-
-    // });
-})
+  //     // the code below is for delete testing
+  //     it("to test the delete user is working or not", async () => {
+  //       const status = await Users.deleteMany();
+  //       expect(status.ok).toBe(1);
+  //     });
+});
