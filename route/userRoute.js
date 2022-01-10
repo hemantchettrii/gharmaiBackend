@@ -155,5 +155,18 @@ router.delete("/profile/delete/:id", verifyUser.verifyUser, function (req, res) 
     });
 });
 
+/***** show the user data *****/
+router.get("/profile/showall", verifyUser.verifyUser,  function (req, res) {
+  // console.log("Hello World");
+  userModel
+    .find()
+    .then(function (data) {
+      res.status(201).json({success: true, data: data});
+    })
+    .catch(function (error) {
+      res.status(500).json({ message: error });
+    });
+});
+
 //exporting router
 module.exports = router;
