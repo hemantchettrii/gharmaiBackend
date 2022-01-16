@@ -92,6 +92,29 @@ router.post("/user/login", function (req, res) {
     .catch();
 });
 
+//Photo upload
+router.post( "/profile/update", verifyUser.verifyUser,  function (req, res) {
+  const uid = req.userData._id;
+  // console.log(req.file)
+    if (req.file == undefined) {
+      return res
+        .status(400)
+        .json({ message: "only png/jpeg/gif files are allowed!" });
+    }
+    // const data = new userModel({
+    //   profile_pic: req.file.filename,
+    // });
+    userModel
+      .updateOne({ _id: uid }, { profile_pic : req.file.filename})
+      .then(function (result) {
+        res.status(201).json({ message: "Profile Picture Uploaded!" });
+      })
+      .catch(function (error) {
+        res.status(500).json({ message: error });
+      });
+  }
+);
+
 /*****  *****/
 router.get("/profile/show/:id", verifyUser.verifyUser, function (req, res) {
   const user_id = req.params.id;
