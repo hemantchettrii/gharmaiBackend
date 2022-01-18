@@ -172,8 +172,8 @@ router.put("/profile/update/:id", verifyUser.verifyUser, function (req, res) {
   const id = req.params.id;
   const un = req.body.username;
   const em = req.body.emailUser;
-  const pu = req.body.phoneUser;
   const au = req.body.addressUser;
+  const pu = req.body.phoneUser;
   // const profile_pic = req.body.profile_pic;
   userModel
     .updateMany(

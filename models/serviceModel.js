@@ -17,6 +17,11 @@ const serviceSchema = new mongoose.Schema({
     servicePrice: {
         type: String,
     },
+    serviceCategory:{
+        type: String,
+        enum: ['Salon for Women', 'Salon fro Men', 'Plumber', 'Electrician','Cleaning and Disinfection','Carpenter', 'Men Therapy',"Women Therapy", 'other'  ],
+        default: ''
+    },
 });
 
 const Services = mongoose.model("Service", serviceSchema);

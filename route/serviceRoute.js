@@ -8,11 +8,14 @@ const Services = require("../models/serviceModel");
 
 /** insert code **/
 router.post('/service/insert', upload.single('serviceImage'),  function (req, res) {
+
+    console.log("Hit")
     const serviceName = req.body.serviceName;
     const categoryID = req.body.categoryID;
     const serviceDetails = req.body.serviceDetails;
     const servicePrice = req.body.servicePrice;
     const serviceImage = req.body.filename;
+    const serviceCategory= req.body.serviceCategory;
 
     /*** INSERT CODE HERE ***/
     const data = new Services({
@@ -21,16 +24,23 @@ router.post('/service/insert', upload.single('serviceImage'),  function (req, re
         serviceDetails: serviceDetails,
         servicePrice: servicePrice,
         serviceImage: serviceImage,
+        serviceCategory: serviceCategory,
     });
+    console.log(data)
     data
         .save()
         .then(function(result) {
+    console.log("save"+data)
+
             res.status(201).json({ message: "Service Inserted!", success: true });
         })
         .catch(function(err) {
+
             res.status(500).json({ message: err });
+    console.log(err)
         });
 })
+
 
 //display all the items in survice
 router.get("/service/showall", verifyUser.verifyUser, function (req, res) {
