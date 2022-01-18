@@ -32,4 +32,16 @@ router.post('/service/insert', upload.single('serviceImage'),  function (req, re
         });
 })
 
+//display all the items in survice
+router.get("/service/showall", verifyUser.verifyUser, function (req, res) {
+    Services.find()
+        .then(function (data) {
+            res.status(201).json({ success: true, data: data });
+        })
+
+        .catch(function (err) {
+            res.status(500).json({ message: err });
+        });
+});
+
 module.exports = router;
