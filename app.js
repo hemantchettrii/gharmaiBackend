@@ -14,7 +14,8 @@ const app = express();
 app.use(cors());
 
 const path = require("path");
-
+const publicDir = path.join(__dirname, "category");
+app.use(express.static(publicDir));         
 // const publicDir = path.join(__dirname, "movies");
 // app.use(express.static(publicDir));
 

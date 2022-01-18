@@ -25,7 +25,7 @@ router.post('/service/insert', upload.single('serviceImage'),  function (req, re
     data
         .save()
         .then(function(result) {
-            res.status(201).json({ message: "Service Inserted!" });
+            res.status(201).json({ message: "Service Inserted!", success: true });
         })
         .catch(function(err) {
             res.status(500).json({ message: err });

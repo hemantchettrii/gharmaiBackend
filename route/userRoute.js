@@ -2,7 +2,7 @@ const express = require("express");
 const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs"); //Password hash
 const jwt = require("jsonwebtoken"); //token generator
-
+const upload = require("../middleware/fileUpload");
 // const upload = require("../middleware/fileUpload");
 // const profileUpload = require("../middleware/profile.imageUpload");
 
@@ -94,32 +94,53 @@ router.post("/user/login", function (req, res) {
     .catch();
 });
 
-//Photo upload
-router.post( "/profile/update", verifyUser.verifyUser,  function (req, res) {
-  const uid = req.userData._id;
+
+
+
+router.put( "/profile/image/update/:id", upload.single("file"), function (req, res) {
+    
+  const uid = req.params.id;
+
+  console.log(uid)
+
+  console.log(req.file.filename)
+
   // console.log(req.file)
+
     if (req.file == undefined) {
+
       return res
+
         .status(400)
+
         .json({ message: "only png/jpeg/gif files are allowed!" });
+
     }
-    // const data = new userModel({
-    //   profile_pic: req.file.filename,
-    // });
-    userModel
-      .updateOne({ _id: uid }, { profile_pic : req.file.filename})
+
+    userModel.updateOne({ _id: uid }, { profile_picUser : req.file.filename})
+
       .then(function (result) {
-        res.status(201).json({ message: "Profile Picture Uploaded!", success: true });
+
+      console.log(result)
+
+        res.status(201).json({ message: "Profile Picture Uploaded!" });
+
       })
+
       .catch(function (error) {
+
         res.status(500).json({ message: error });
+
       });
+
   }
+
 );
 
 /*****  *****/
-router.get("/profile/show/:id", verifyUser.verifyUser, function (req, res) {
+router.get("/profile/show/:id", function (req, res) {
   const user_id = req.params.id;
+  console.log(req.body);
   userModel
     .findOne({ _id: user_id })
     .then(function (data) {
