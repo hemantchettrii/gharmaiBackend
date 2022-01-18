@@ -173,11 +173,12 @@ router.put("/profile/update/:id", verifyUser.verifyUser, function (req, res) {
   const un = req.body.username;
   const em = req.body.emailUser;
   const pu = req.body.phoneUser;
+  const au = req.body.addressUser;
   // const profile_pic = req.body.profile_pic;
   userModel
     .updateMany(
       { _id: id },
-      { username: un, emailUser: em, phoneUser:pu }
+      { username: un, emailUser: em, phoneUser:pu, addressUser:au }
     )
     .then(function (result) {
       res.status(201).json({ message: "Profile Picture Updated!", success: true });
