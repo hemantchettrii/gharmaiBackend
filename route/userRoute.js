@@ -20,7 +20,7 @@ router.post("/user/register", function (req, res) {
   const dob = req.body.dateofbirthUser;
   const add = req.body.addressUser;
   const gen = req.body.genderUser;
-  const cont = req.body.contactNoUser;
+  const cont = req.body.phoneUser;
   const pp = req.body.profile_picUser;
   const ut = req.body.userType;
 
@@ -34,14 +34,14 @@ router.post("/user/register", function (req, res) {
       dateofbirthUser: dob,
       addressUser: add,
       genderUser: gen,
-      contactNoUser: cont,
+      phoneUser: cont,
       profile_picUser: pp,
       userType: ut,
     });
     data
       .save()
       .then(function (result) {
-        res.status(201).json({ message: "Registered successfully" });
+        res.status(201).json({ message: "Registered successfully", success: true });
       })
       .catch(function (error) {
         res.status(500).json({ message: error });
@@ -52,17 +52,19 @@ router.post("/user/register", function (req, res) {
 
 /***** LOGIN SYSTEM *****/
 router.post("/user/login", function (req, res) {
-  // console.log(req.body) --->Checking is the data is coming through frontend
+  console.log(req.body) //--->Checking is the data is coming through frontend
   /*** FIRST, WE NEED USERNAME AND PASSWORD FROM CLIENT ***/
-  const username = req.body.username;
+  const emailUser = req.body.emailUser;
   const password = req.body.password;
 
   /*** SECOND, WE NEED TO CHECK IF THE USERNAME EXIST OR NOT ***/
   userModel
-    .findOne({ username: username })
+    .findOne({ emailUser: emailUser })
     .then(function (userData) {
       //all the data of username is now in the variable userData
       if (userData === null) {
+      console.log(" I m here")
+
         //if the username not found.that means they are invalid users!!
         return res.status(403).json({ message: "Invalid Credentials!" });
       }
@@ -107,7 +109,7 @@ router.post( "/profile/update", verifyUser.verifyUser,  function (req, res) {
     userModel
       .updateOne({ _id: uid }, { profile_pic : req.file.filename})
       .then(function (result) {
-        res.status(201).json({ message: "Profile Picture Uploaded!" });
+        res.status(201).json({ message: "Profile Picture Uploaded!", success: true });
       })
       .catch(function (error) {
         res.status(500).json({ message: error });
@@ -134,6 +136,8 @@ router.get("/profile/single/:id", verifyUser.verifyUser, function (req, res) {
   userModel
     .findById(id)
     .then(function (data) {
+      res.send({ data: data, success: true });
+
       res.status(200).json(data);
     })
     .catch(function (err) {
@@ -145,18 +149,17 @@ router.get("/profile/single/:id", verifyUser.verifyUser, function (req, res) {
 /************** UPDATING USER PROFILE **************/
 router.put("/profile/update/:id", verifyUser.verifyUser, function (req, res) {
   const id = req.params.id;
-  const fn = req.body.firstname;
-  const ln = req.body.lastname;
   const un = req.body.username;
-  const em = req.body.email;
+  const em = req.body.emailUser;
+  const pu = req.body.phoneUser;
   // const profile_pic = req.body.profile_pic;
   userModel
     .updateMany(
       { _id: id },
-      { firstname: fn, lastname: ln, username: un, email: em }
+      { username: un, emailUser: em, phoneUser:pu }
     )
     .then(function (result) {
-      res.status(201).json({ message: "Profile Picture Updated!" });
+      res.status(201).json({ message: "Profile Picture Updated!", success: true });
     })
     .catch(function (error) {
       res.status(500).json({ message: error });
@@ -171,7 +174,7 @@ router.delete("/profile/delete/:id", verifyUser.verifyUser, function (req, res) 
   userModel
     .deleteOne({ _id: id })
     .then(function (req, res) {
-      res.status(201).json({ message: "Data deleted" });
+      res.status(201).json({ message: "Data deleted", success:true });
     })
     .catch(function (error) {
       res.status(500).json({ message: error });
