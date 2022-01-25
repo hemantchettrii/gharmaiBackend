@@ -1,42 +1,34 @@
 const mongoose = require('mongoose');
 
 const workerSchema = new mongoose.Schema({
-    fullname: {
+    workerName: {
         type: String
     },
-    email: {
+    workerEmail: {
         type: String,
         required: 'Email address is required',
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-    password: {
+    workerPassword: {
         type: String
     },
-    confirmpassword: {
+    workerProfile_pic: {
         type: String
     },
-    profile_pic: {
+    workerDateOfBirth: {
         type: String
     },
-    dateofbirth: {
+    workerAddress: {
         type: String
     },
-    address: {
-        type: String
-    },
-    gender: {
+    workerGender: {
         type: String,
         enum: ['Male', 'Female', 'Others'],
         default: 'Male'
     },
-    contactNo: {
-        type: Number
+    workerContactNo: {
+        type: String
     },
-    userType:{
-        type: String,
-        enum : ['Worker','User'],
-        default : 'User'
-    }
 });
 
 const Workers = mongoose.model('Worker', workerSchema);

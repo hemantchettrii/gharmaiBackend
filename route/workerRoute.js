@@ -6,16 +6,35 @@ const router = new express.Router();
 const verifyUser = require("../middleware/auth");
 
 router.post("/worker/register", function (req, res) {
-    const un = req.body.username;
-    const em = req.body.email;
-    const pw = req.body.password;
+    console.log("register hit")
+    const un = req.body.workerName;
+    const em = req.body.workerEmail;
+    const pw = req.body.workerPassword;
+    const pic = req.body.workerProfile_pic;
+    const dob = req.body.workerDateOfBirth;
+    const add = req.body.workerAddress;
+    const gen = req.body.workerGender;
+    const con = req.body.workerContactNo;
+    
 
     bcrypt.hash(pw, 10, function (err, hash1) {
-        const data = new workerModel({ username: un, email: em, password: hash1 });
+        const data = new workerModel({ 
+            workerName: un, 
+            workerEmail: em,
+            workerProfile_pic: pic,
+            workerDateOfBirth: dob, 
+            workerAddress: add,   
+            workerGender: gen, 
+            workerContactNo: con,  
+            workerPassword: hash1,
+         });
+         console.log(data)
         data
         .save()
         .then(function (result) {
-            res.status(201).json({ message: "Registered successfully" });
+            res.status(201).json({ message: "Registered successfully", success:true });
+            console.log("Register Success")
+
         })
         .catch(function (error) {
             res.status(500).json({ message: error });
@@ -24,10 +43,12 @@ router.post("/worker/register", function (req, res) {
 })
 
 router.post("/worker/login", function (req, res) {
-    const username = req.body.username;
-    const password = req.body.password;
+    console.log("Login hit")
+    const workerEmail = req.body.workerEmail;
+    const password = req.body.workerPassword;
+
     workerModel
-        .findOne({ username: username })
+        .findOne({ workerEmail: workerEmail })
         .then(function (userData) {
             if (userData === null) {
             return res.status(403).json({ message: "Invalid Credentials!" });
@@ -41,6 +62,7 @@ router.post("/worker/login", function (req, res) {
                 .status(200).json({
                     t: token, userId: userData._id, success: true, message: "Authorization Success!!!",
                 });
+                console.log("Login Success")
             });
         })
         .catch();
