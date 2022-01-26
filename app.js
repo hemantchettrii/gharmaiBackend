@@ -2,10 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("./myDatabase/dbConnection");
-const userModel = require("./route/userRoute");
-const workerModel = require("./route/workerRoute");
-const serviceModel = require("./route/serviceRoute");
-const categoryModel = require("./route/categoryRoute");
+const userRoute = require("./route/userRoute");
+const workerRoute = require("./route/workerRoute");
+const serviceRoute = require("./route/serviceRoute");
+const categoryRoute = require("./route/categoryRoute");
 
 const bodyParser = require("body-parser");
 
@@ -25,10 +25,10 @@ app.use(express.static(publicDir));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(workerModel);
-app.use(userModel);
-app.use(categoryModel);
-app.use(serviceModel);
+app.use(workerRoute);
+app.use(userRoute);
+app.use(categoryRoute);
+app.use(serviceRoute);
 // app.use(movieModel);
 // app.use(reviewModel);
 
