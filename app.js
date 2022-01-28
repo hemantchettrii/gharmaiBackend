@@ -6,6 +6,9 @@ const userRoute = require("./route/userRoute");
 const workerRoute = require("./route/workerRoute");
 const serviceRoute = require("./route/serviceRoute");
 const categoryRoute = require("./route/categoryRoute");
+const adminRoute = require("./route/adminRoute");
+
+
 
 const bodyParser = require("body-parser");
 
@@ -29,6 +32,9 @@ app.use(workerRoute);
 app.use(userRoute);
 app.use(categoryRoute);
 app.use(serviceRoute);
+app.use(adminRoute);
+
+
 // app.use(movieModel);
 // app.use(reviewModel);
 

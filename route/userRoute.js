@@ -153,6 +153,7 @@ router.get("/profile/show/:id", function (req, res) {
 
 /** DISPLAYING SINGLE USER DATA **/
 router.get("/profile/single/:id", verifyUser.verifyUser, function (req, res) {
+  console.log("gesagea")
   const id = req.params.id;
   userModel
     .findById(id)
