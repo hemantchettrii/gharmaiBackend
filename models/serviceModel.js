@@ -19,7 +19,7 @@ const serviceSchema = new mongoose.Schema({
     },
     serviceCategory:{
         type: String,
-        enum: ['Salon for Women', 'Salon fro Men', 'Plumber', 'Electrician','Cleaning and Disinfection','Carpenter', 'Men Therapy',"Women Therapy", 'other'  ],
+        enum: ['Salon for Women', 'Salon for Men', 'Plumber', 'Electrician','Cleaning and Disinfection','Carpenter', 'Men Therapy',"Women Therapy", 'other'  ],
         default: ''
     },
 });

@@ -2,7 +2,7 @@ const express = require("express");
 const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs"); //Password hash
 const jwt = require("jsonwebtoken"); //token generator
-const upload = require("../middleware/fileUpload");
+const upload = require("../middleware/profile.imageUpload");
 // const upload = require("../middleware/fileUpload");
 // const profileUpload = require("../middleware/profile.imageUpload");
 
@@ -94,47 +94,25 @@ router.post("/user/login", function (req, res) {
     .catch();
 });
 
-
-
-
-router.put( "/profile/image/update/:id", upload.single("file"), function (req, res) {
-    
+router.put( "/profile/image/update/:id", upload.single("profileImage"), function (req, res) {
   const uid = req.params.id;
-
   console.log(uid)
-
   console.log(req.file.filename)
-
   // console.log(req.file)
-
     if (req.file == undefined) {
-
       return res
-
         .status(400)
-
         .json({ message: "only png/jpeg/gif files are allowed!" });
-
     }
-
     userModel.updateOne({ _id: uid }, { profile_picUser : req.file.filename})
-
       .then(function (result) {
-
       console.log(result)
-
         res.status(201).json({ message: "Profile Picture Uploaded!" });
-
       })
-
       .catch(function (error) {
-
         res.status(500).json({ message: error });
-
       });
-
   }
-
 );
 
 /*****  *****/
@@ -205,7 +183,7 @@ router.delete("/profile/delete/:id", verifyUser.verifyUser, function (req, res) 
 });
 
 /***** show the user data *****/
-router.get("/profile/showall", verifyUser.verifyUser,  function (req, res) {
+router.get("/profile/showall", verifyUser.verifyUser, function (req, res) {
   // console.log("Hello World");
   userModel
     .find()

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 
-const upload = require("../middleware/fileUpload");
+const upload = require("../middleware/category.fileUpload");
 
 const verifyUser = require("../middleware/auth");
 const Categories = require("../models/categoryModel");
@@ -27,7 +27,7 @@ router.post('/category/insert',  upload.single('categoryImage'),  function (req,
         });
 })
 
-/**** UPDATING SURVICES ****/
+/**** UPDATING CATEGORY ****/
 router.put("/category/update", verifyUser.verifyUser, function (req, res) {
     /*** UPDATE CODE HERE ***/
     const id = req.body.id;
@@ -62,7 +62,7 @@ router.delete("/category/remove/:id", verifyUser.verifyUser, function (req, res)
 
     Categories.deleteOne({ _id: id })
         .then(function (result) {
-        res.status(201).json({ message: "Survice deleted" });
+        res.status(201).json({ message: "Category deleted" });
         })
         .catch(function (err) {
         res.status(500).json({ message: err });
@@ -75,7 +75,7 @@ router.get("/category/showall", verifyUser.verifyUser, function (req, res) {
         .then(function (data) {
         res.status(201).json({ success: true, data: data });
         })
-
+        
         .catch(function (err) {
         res.status(500).json({ message: err });
         });

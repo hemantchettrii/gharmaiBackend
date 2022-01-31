@@ -12,7 +12,7 @@ router.post("/worker/register", function (req, res) {
     const workerName = req.body.workerName;
     const workerEmail = req.body.workerEmail;
     const workerPassword = req.body.workerPassword;
-    const workerProfile_pic = req.body.workerProfile_pic;
+    const workerProfile_pic = req.body.filename;
     const workerDateOfBirth = req.body.workerDateOfBirth;
     const workerAddress = req.body.workerAddress;
     const workerGender = req.body.workerGender;
@@ -193,6 +193,20 @@ router.delete("/worker/profile/delete/:id", verifyWorker.verifyWorker, function 
         .catch(function (error) {
         res.status(500).json({ message: error });
         });
+});
+
+// show all
+router.get("/worker/showAll", function (req, res) {
+  console.log("Hello worker");
+  workerModel
+    .find()
+    .then(function (data) {
+      console.log(data);
+      res.status(201).json({ success: true, data: data });
+    })
+    .catch(function (error) {
+      res.status(500).json({ message: "Error aayo hai" });
+    });
 });
 
 module.exports = router;

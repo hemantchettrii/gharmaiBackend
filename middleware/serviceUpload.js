@@ -4,7 +4,7 @@ const multer = require("multer");
 const storage = multer.diskStorage({
     //where and with what name
     destination: function (req, file, cb) {
-        cb(null, "./service"); //where files is foldername
+        cb(null, "./serviceUpload"); //where files is foldername
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + file.originalname);

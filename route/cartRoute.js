@@ -7,7 +7,7 @@ const verifyUser = require("../middleware/auth");
 
 router.post(
   "/service/subscribe/:id",
-  verifyUser.verifyuser,
+  verifyUser.verifyUser,
   async (req, res) => {
     console.log("fefa");
     const userId = req.params.id;

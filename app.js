@@ -8,8 +8,6 @@ const serviceRoute = require("./route/serviceRoute");
 const categoryRoute = require("./route/categoryRoute");
 const adminRoute = require("./route/adminRoute");
 
-
-
 const bodyParser = require("body-parser");
 
 //load express engine
