@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const router = new express.Router();
 const workerUpload = require("../middleware/worker.imageUpload")
 const verifyWorker = require("../middleware/workerAuth");
+const verifyAdmin = require("../middleware/adminAuth");
+
 
 //worker register
 router.post("/worker/register", function (req, res) {
@@ -183,7 +185,21 @@ router.get("/worker/profile/show/:id", verifyWorker.verifyWorker, function (req,
 
 //delete account
 router.delete("/worker/profile/delete/:id", verifyWorker.verifyWorker, function (req, res) {
-  // console.log("Delete function");
+  console.log("Delete function");
+    const id = req.params.id;
+    workerModel
+        .deleteOne({ _id: id })
+        .then(function (req, res) {
+        res.status(201).json({ message: "Data deleted", success:true });
+        })
+        .catch(function (error) {
+        res.status(500).json({ message: error });
+        });
+});
+
+//delete account by admin
+router.delete("/admin/worker/profile/delete/:id", verifyAdmin.verifyAdmin, function (req, res) {
+  console.log("Delete worker by admin");
     const id = req.params.id;
     workerModel
         .deleteOne({ _id: id })
@@ -196,7 +212,7 @@ router.delete("/worker/profile/delete/:id", verifyWorker.verifyWorker, function 
 });
 
 // show all
-router.get("/worker/showAll", function (req, res) {
+router.get("/worker/showAll", verifyAdmin.verifyAdmin, function (req, res) {
   console.log("Hello worker");
   workerModel
     .find()

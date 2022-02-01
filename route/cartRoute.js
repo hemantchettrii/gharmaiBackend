@@ -32,7 +32,6 @@ router.post(
           user.course[itemIndex] = courseItem;
           res.send({ success: "false", check: "No" });
         } else {
-        
           user.course.push({
             serviceid,
             serviceName,
@@ -50,7 +49,7 @@ router.post(
           user_ID: userId,
           service: [{ serviceid, serviceName, seviceDetails, servicePhoto }],
         });
-      
+
         console.log("push");
         return res.status(201).json({ success: "true" });
       }

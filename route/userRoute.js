@@ -9,6 +9,7 @@ const upload = require("../middleware/profile.imageUpload");
 /*** bulk export of the route ***/
 const router = new express.Router();
 const verifyUser = require("../middleware/auth");
+const verifyAdmin = require("../middleware/adminAuth");
 
 //Register System
 router.post("/user/register", function (req, res) {
@@ -182,9 +183,23 @@ router.delete("/profile/delete/:id", verifyUser.verifyUser, function (req, res) 
     });
 });
 
+//delete the data by admin
+router.delete("/admin/user/delete/:id", verifyAdmin.verifyAdmin, function (req, res) {
+  console.log("User delete by admin");
+  const id = req.params.id;
+  userModel
+    .deleteOne({ _id: id })
+    .then(function (req, res) {
+      res.status(201).json({ message: "Data deleted", success:true });
+    })
+    .catch(function (error) {
+      res.status(500).json({ message: error });
+    });
+});
+
 /***** show the user data *****/
-router.get("/profile/showall", verifyUser.verifyUser, function (req, res) {
-  // console.log("Hello World");
+router.get("/profile/showall", verifyAdmin.verifyAdmin, function (req, res) {
+  console.log("Hello World");
   userModel
     .find()
     .then(function (data) {

@@ -4,6 +4,7 @@ const router = new express.Router();
 const serviceUpload = require("../middleware/serviceUpload");
 
 const verifyUser = require("../middleware/auth");
+const verifyAdmin = require("../middleware/adminAuth")
 const Services = require("../models/serviceModel");
 
 /** insert code **/
@@ -76,7 +77,25 @@ router.delete(
 
     Services.deleteOne({ _id: id })
       .then(function (result) {
-        res.status(201).json({ message: "Service deleted" });
+        res.status(201).json({ message: "Service deleted", success:true });
+      })
+      .catch(function (err) {
+        res.status(500).json({ message: err });
+      });
+  }
+);
+
+//service delete code for admin
+router.delete("/admin/service/delete/:id", verifyAdmin.verifyAdmin, function (req, res) {
+    console.log("Admin delete service")
+    // const id = req.body.id;  // ---> if it comes from form
+    const id = req.params.id; // ---> if it comes from url
+
+    console.log(id)
+    Services.deleteOne({ _id: id })
+      .then(function (result) {
+    console.log("i m here")
+        res.status(201).json({ message: "Service deleted", success:true });
       })
       .catch(function (err) {
         res.status(500).json({ message: err });
@@ -85,7 +104,8 @@ router.delete(
 );
 
 //display all the items in service
-router.get("/service/showall", verifyUser.verifyUser, function (req, res) {
+router.get("/service/showall", verifyAdmin.verifyAdmin, function (req, res) {
+  console.log("i1service showAll")
   Services.find()
     .then(function (data) {
       res.status(201).json({ success: true, data: data });
