@@ -1,25 +1,41 @@
 const mongoose = require("mongoose");
 
 const cartSchema = new mongoose.Schema({
-  user_ID: {
-    type: String,
-  },
-  cart: [
+  user: [
     {
-      serviceID: {
-        type: String,
+      username:{
+        type: String
       },
+      emailUser:{
+        type: String
+      },
+      phoneUser:{
+        type: String
+      },
+      address:{
+        type: String
+      }
+    }
+  ],
+  ServiceId:{
+    type: String
+  },
+  service: [
+    {
       serviceName: {
         type: String,
       },
-      seviceDetails: {
+      serviceDetails: {
         type: String,
       },
-      servicePhoto: {
+      servicePrice: {
+        type: String,
+      },
+      serviceCategory: {
         type: String,
       },
     },
-  ],
+  ]
 });
 
 const addtocart = mongoose.model("addToCart_table", cartSchema);

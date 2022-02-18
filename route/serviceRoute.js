@@ -105,10 +105,15 @@ router.delete("/admin/service/delete/:id", verifyAdmin.verifyAdmin, function (re
 
 //display all the items in service
 router.get("/service/showall", verifyAdmin.verifyAdmin, function (req, res) {
-  console.log("i1service showAll")
+  console.log("service showAll")
   Services.find()
     .then(function (data) {
-      res.status(201).json({ success: true, data: data });
+      res.status(201).json({ 
+        success: true, 
+        data: data, 
+        // serviceCategory: serviceCategory.serviceCategory
+       });
+      console.log("service data "+  data)
     })
 
     .catch(function (err) {

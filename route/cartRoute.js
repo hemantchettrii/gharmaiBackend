@@ -1,58 +1,52 @@
-const { req, res } = require("express");
+const { req, res, request } = require("express");
 const express = require("express");
 const router = new express.Router();
-const subscriptionModel = require("../models/subscriptionModel");
-const cartModel = require("../models/cartModel");
+const subscriptionModel = require("../models/cartModel");
+const serviceModel = require("../models/serviceModel");
+const userModel = require("../models/userModel");
 const verifyUser = require("../middleware/auth");
 
 router.post(
   "/service/subscribe/:id",
   verifyUser.verifyUser,
   async (req, res) => {
-    console.log("fefa");
+    console.log("Hit")
     const userId = req.params.id;
     const serviceid = req.body.serviceID;
     try {
-      const user = await subscriptionModel.findOne({ user_ID: userId });
-      const service = await cartModel.findOne({ _id: serviceid });
-
-      if (!service) {
-        res.json({ success: "false", message: "Product does not exist" });
+      const users = await userModel.findOne({userId: userId})
+      const user = await serviceModel.findOne({ user: userId, serviceId: serviceid });
+      const service = await subscriptionModel.findOne({serviceID: serviceid})
+            console.log(
+              "users "+users, 
+              "user "+user, 
+              "service "+service)
+      if (!user){
+        res.json({ success: false, message: "product already booked"});
+        console.log("i m here")
       }
+      else{
+        const data = new subscriptionModel({
+          user: users,
+          // ServiceId: serviceid,
+          service: user
 
-      const serviceName = service.serviceName;
-      const seviceDetails = course.seviceDetails;
-      const servicePhoto = course.servicePhoto;
-
-      if (user) {
-        let itemIndex = user.course.findIndex((p) => p.serviceid == serviceid);
-
-        if (itemIndex > -1) {
-          let courseItem = user.course[itemIndex];
-          user.course[itemIndex] = courseItem;
-          res.send({ success: "false", check: "No" });
-        } else {
-          user.course.push({
-            serviceid,
-            serviceName,
-            seviceDetails,
-            servicePhoto,
-          });
-        }
-        // save the favorites
-        user.save();
-        return res.status(201).json({
-          success: "true",
-        });
-      } else {
-        const newsublist = await cartModel.create({
-          user_ID: userId,
-          service: [{ serviceid, serviceName, seviceDetails, servicePhoto }],
         });
 
-        console.log("push");
-        return res.status(201).json({ success: "true" });
+        console.log(data)
+        data
+        .save()
+        .then(function (result) {
+          console.log("save" + data);
+          res.status(201).json({ message: "Booked", success: true });
+        })
+        .catch(function (err) {
+          res.status(500).json({ message: err });
+          console.log(err);
+        });
       }
+
+    
     } catch {
       (error) => {
         res.json({ success: "false", error: error });
@@ -61,20 +55,34 @@ router.post(
   }
 );
 
-router.get("/user/getCart/:id", async (req, res) => {
+router.get("/user/getCart", async (req, res) => {
   const userId = req.params.id;
+console.log("booking hit ")
 
-  try {
-    const subItem = await cartModel.findOne({ user_ID: userId });
-    console.log(subItem);
-    if (subItem && subItem.course.length > 0) {
-      return res.send({ success: "true", SubItem: subItem });
-    } else {
-      res.send({ check: "empty" });
-    }
-  } catch (error) {
-    res.status(404).json({ success: "false", error: error });
-  }
+  subscriptionModel
+  .find()
+  .then(function (data) {
+    res.status(201).json({ 
+      success: true, 
+      data: data, 
+     });
+    console.log("service data "+  data)
+  })
+
+  .catch(function (err) {
+    res.status(500).json({ message: err });
+  });
+  // try {
+  //   const subItem = await cartModel.findOne({ user_ID: userId });
+  //   console.log(subItem);
+  //   if (subItem && subItem.course.length > 0) {
+  //     return res.send({ success: "true", SubItem: subItem });
+  //   } else {
+  //     res.send({ check: "empty" });
+  //   }
+  // } catch (error) {
+  //   res.status(404).json({ success: "false", error: error });
+  // }
 });
 
 // delete cart item
